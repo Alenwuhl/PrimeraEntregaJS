@@ -1,4 +1,4 @@
-// Defino las constantes
+// Defino los Arrays
 const prendas = [
     {id: 1, nombre: "Teddy", precio: 2990, stock: 20},
     {id: 2, nombre: "Buzo Jogging", precio: 2490, stock: 40},
@@ -19,10 +19,11 @@ class compras {
         }
     }
 }
-
+// inicializo la compra llamando a comprar()
 function main() {
     comprar()
 }
+
 
 function comprar() {
     let respuesta = true
@@ -30,7 +31,7 @@ function comprar() {
     console.table(prendas)
     while (respuesta) {
         let id = prompt("Ingresa el ID de la prenda que deseas comprar:")
-        let prendaElegida = buscarPrenda(id)
+        let prendaElegida = buscarPrenda(id) //confirma que el producto exista
         console.log(prendaElegida)
         if (prendaElegida !== undefined) {
             carrito.push(prendaElegida)
@@ -56,13 +57,14 @@ function comprar() {
 function finalizarCompra() {
     const compra = new compras(carrito)
 
-    mostrarMetodoPago()
+    console.log("El total de tu compra es de $ "+ compra.obtenerSubtotal() +" y puedes realizarla en:")
+    mostrarMetodoPago() //llamo a mostrarMetodoPago() que me dice cuales son mis posibilidades para pagar en cuotas.
     let cantCuotas = prompt("ingrese la cantidad de cuotas deseadas:");
     exito = mostrarCuotas(compra, cantCuotas);
     if (exito){
         let respuestaComprar = confirm ("Confirme si desea realizar la compra")
         if (respuestaComprar === true) {
-            alert("El total de tu compras es de $ "+ compra.obtenerSubtotal() + " a pagar en " + compra.cantCuotas + " cuotas de $" + compra.importeCadaCuota + ". Muchas gracias!")
+            alert("El total de tu compras es de $ "+ compra.obtenerSubtotal() + " a pagar en " + compra.cantCuotas + " cuotas de $" + parseFloat(compra.importeCadaCuota.toFixed(2)) + ". Muchas gracias!")
         } else {
             alert("😪Que lastima! Esperamos verte otra vez por aquí!")
         }
@@ -72,7 +74,6 @@ function finalizarCompra() {
 
 function mostrarMetodoPago() {
     let intereses = "sin intereses"
-    console.log ("Puedes realizar la compra con los siguientes métodos de pago en cuotas:")
     for (let i = 1; i <= 6; i++) {
         if (i > 3) {
             intereses= "con intereses."
@@ -88,7 +89,7 @@ function mostrarCuotas(compra, cantidadCuotas) {
         cuota = calcularCuota (compra.obtenerSubtotal(), cantidadCuotas)
         compra.importeCadaCuota = cuota
         compra.cantCuotas = cantidadCuotas
-        console.log("La compra será pagada en " + cantidadCuotas + " cuotas de $" + cuota)
+        console.log("La compra será pagada en " + cantidadCuotas + " cuotas de $" + parseFloat(cuota.toFixed(2)))
     }else {
         exito = false
         compra.importeCadaCuota = compra.obtenerSubtotal()
@@ -109,6 +110,7 @@ function calcularCuota(monto, cantidadCuotas) {
      
 }
 
+//verifica la existencia
 function buscarPrenda(id){
     let resultado = prendas.find((prenda)=> prenda.id === parseInt(id))
     return resultado
